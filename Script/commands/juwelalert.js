@@ -1,6 +1,6 @@
 /**
  * ╔══════════════════════════════════════════════════════════╗
- *  JUWEL ALERT  —  Session Alert + Bot Start Notice
+ *  JUWEL ALERT  —  Session Alert + Bot Start/Stop Notice
  *  Credit : 乛 M𝆠፝֟R ཐི༏ཋྀ JU𝆠፝֟W𝆠፝֟ELꜛཐི༏ཋྀ࿐
  * ╚══════════════════════════════════════════════════════════╝
  *
@@ -14,6 +14,8 @@
  *             JUWEL_DISCORD_WEBHOOK            (Discord)
  *   ৩) সেশন ফিরে এলে Telegram/Discord + মেসেঞ্জার অ্যাডমিনদের "আবার অনলাইন" জানায়।
  *   ৪) বটের লগে FATAL / session dead / login failed দেখলে সেটাও হিসেবে ধরে।
+ *   ৫) [নতুন] বট বন্ধ হলে (কমান্ড/process.exit, Ctrl+C, SIGTERM, SIGHUP)
+ *      Telegram/Discord-এ "STOPPED" নোটিশ পাঠায় — কত দিন/ঘণ্টা/মিনিট/সেকেন্ড চালু ছিল সহ।
  *
  *  কমান্ড:  #juwelalert        (সেশনের অবস্থা দেখায়, শুধু বট-অ্যাডমিন)
  *           #juwelalert test   (টেস্ট সতর্কতা পাঠিয়ে দেখে Telegram/Discord ঠিক আছে কি না)
@@ -28,6 +30,7 @@ const PROBE_EVERY_MS = Number(process.env.JUWEL_PROBE_MS) || 5 * 60 * 1000;
 const ALERT_COOLDOWN_MS = 30 * 60 * 1000;
 const PROBE_FAILS_BEFORE_ALERT = 2;
 const BOOT_NOTICE_DELAY_MS = Number(process.env.JUWEL_BOOT_MS) || 45 * 1000;
+const STOP_NOTICE_WAIT_MS = 7000; // বন্ধ হওয়ার আগে নোটিশ পাঠাতে সর্বোচ্চ এত সময় অপেক্ষা
 
 const state = global.__juwelAlert || (global.__juwelAlert = {
   started: false,
@@ -142,6 +145,68 @@ async function raiseRecovery() {
   await sendMessengerToAdmins(text);
 }
 
+/* ───────────── stop notice (বট বন্ধ হলে) ───────────── */
+let stopPromise = null;
+
+function stopText(reason) {
+  const up = uptimeParts(process.uptime());
+  const startedAt = new Date(Date.now() - process.uptime() * 1000);
+  let started;
+  try { started = startedAt.toLocaleString("en-GB", { timeZone: "Asia/Dhaka", hour12: true }); }
+  catch (_) { started = startedAt.toISOString(); }
+
+  return (
+    HEAD("🔴 JUWEL BOT • STOPPED") + "\n\n" +
+    "🔴 STATUS ➤ OFFLINE\n" + LINE + "\n" +
+    "📛 কারণ ➤ " + reason + "\n" + LINE + "\n" +
+    "⏱ চালু ছিল\n" +
+    " ┌ 📆 DAYS ➤ " + pad2(up.d) + "\n" +
+    " ├ 🕐 HOURS ➤ " + pad2(up.h) + "\n" +
+    " ├ ⏰ MINUTES ➤ " + pad2(up.m) + "\n" +
+    " └ ⏳ SECONDS ➤ " + pad2(up.s) + "\n" +
+    " ✦ " + up.d + "d " + pad2(up.h) + "h " + pad2(up.m) + "m " + pad2(up.s) + "s\n" + LINE + "\n" +
+    "📅 STARTED ➤ " + started + "\n" +
+    "🕒 STOPPED ➤ " + dhakaTime()
+  );
+}
+
+// একবারই পাঠায়; একই promise ফেরত দেয় যাতে exit তার জন্য অপেক্ষা করতে পারে
+function sendStopNotice(reason) {
+  if (stopPromise) return stopPromise;
+  log("বট বন্ধ হচ্ছে: " + reason, "warn");
+  stopPromise = Promise.race([
+    sendExternal(stopText(reason)).catch(() => false),
+    new Promise((res) => setTimeout(res, STOP_NOTICE_WAIT_MS))
+  ]);
+  return stopPromise;
+}
+
+function installShutdownHook() {
+  if (global.__juwelAlertShutdownHooked) return;
+  global.__juwelAlertShutdownHooked = true;
+
+  const origExit = process.exit.bind(process);
+
+  // কমান্ড/কোড থেকে process.exit() ডাকলে — আগে নোটিশ, তারপর বন্ধ
+  process.exit = function (code) {
+    const c = code === undefined ? 0 : code;
+    sendStopNotice("process.exit(" + c + ") — কমান্ড/কোড দিয়ে বন্ধ").then(
+      () => origExit(c),
+      () => origExit(c)
+    );
+  };
+
+  // Ctrl+C, systemd/pm2/docker stop, টার্মিনাল বন্ধ
+  const names = { SIGINT: "Ctrl+C (SIGINT)", SIGTERM: "stop সিগন্যাল (SIGTERM)", SIGHUP: "টার্মিনাল বন্ধ (SIGHUP)" };
+  Object.keys(names).forEach((sig) => {
+    try {
+      process.on(sig, () => {
+        sendStopNotice(names[sig] + " — ম্যানুয়ালি বন্ধ").then(() => origExit(0), () => origExit(0));
+      });
+    } catch (_) {}
+  });
+}
+
 /* ───────────── log watcher ───────────── */
 const BAD_PATTERNS = [
   /FATAL: Session/i, /Session looks dead/i, /Login failed \[/i,
@@ -222,6 +287,7 @@ function start() {
   if (state.started) return;
   state.started = true;
   installLogWatcher();
+  installShutdownHook();
   const t = setInterval(probe, PROBE_EVERY_MS);
   if (t.unref) t.unref();
 
@@ -285,10 +351,10 @@ const withCredit = (t) => fx(t) + "\n" + LINE + "\n✨ Credit ➤ " + CREDIT;
 module.exports.config = {
   name: "juwelalert",
   aliases: ["jalert"],
-  version: "1.0.0",
+  version: "1.1.0",
   hasPermssion: 2,
   credits: "乛 M𝆠፝֟R ཐི༏ཋྀ JU𝆠፝֟W𝆠፝֟ELꜛཐི༏ཋྀ࿐",
-  description: "সেশন সতর্কতা ও বট চালু নোটিশ",
+  description: "সেশন সতর্কতা ও বট চালু/বন্ধ নোটিশ",
   commandCategory: "system",
   usages: "juwelalert [test]",
   cooldowns: 5
