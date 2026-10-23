@@ -413,9 +413,10 @@ Render / Railway / Heroku-তে সারাক্ষণ অনলাইন।
 
 <h1 align="center">📊 GITHUB STATS</h1>
 
-<!-- দ্রষ্টব্য: github-readme-stats শুধু ব্যক্তিগত অ্যাকাউন্টে কাজ করে, organization-এ নয়। নিচে আপনার নিজের ইউজারনেম বসান। -->
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=YOUR_GITHUB_USERNAME&show_icons=true&theme=tokyonight&hide_border=true"/>
+  <a href="https://github.com/GOAT-MIRAI-MIX/MR-JUWEL">
+    <img src="https://github-readme-stats.vercel.app/api/pin/?username=GOAT-MIRAI-MIX&repo=MR-JUWEL&theme=tokyonight&hide_border=true"/>
+  </a>
 </p>
 
 ---
