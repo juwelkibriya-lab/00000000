@@ -1,395 +1,485 @@
 module.exports.config = {
- name: "settings",
- version: "1.0.0",
- hasPermssion: 2,
- credits: "𝐂𝐘𝐁𝐄𝐑 ☢️_𖣘 -𝐁𝐎𝐓 ⚠️ 𝑻𝑬𝑨𝑴_ ☢️",
- description: "",
- commandCategory: "admin",
- usages: "",
- cooldowns: 10,
- 
+  name: "settings",
+  version: "2.0.0",
+  hasPermssion: 2,
+  credits: "乛 M𝆠፝֟R ཐི༏ཋྀ JU𝆠፝֟W𝆠፝֟ELꜛཐི༏ཋྀ࿐",
+  description: "Bot settings panel",
+  commandCategory: "admin",
+  usages: "",
+  cooldowns: 10
 };
-const totalPath = __dirname + '/cache/totalChat.json';
-const _24hours = 86400000;
+
 const fs = require("fs-extra");
-function handleByte(byte) {
-	const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+const path = require("path");
 
-	let i = 0, usage = parseInt(byte, 10) || 0;
+const totalPath = path.join(__dirname, "cache", "totalChat.json");
+const dataPath = path.join(__dirname, "cache", "data.json");
+const _24hours = 86400000;
 
-	while(usage >= 1024 && ++i){
-		usage = usage/1024;
-	}
- 
-	return(usage.toFixed(usage < 10 && i > 0 ? 1 : 0) + ' ' + units[i]);
+// ================== CONFIG ==================
+const TIMEZONE = "Asia/Dhaka";
+const CREDIT = "乛 M𝆠፝֟R ཐི༏ཋྀ JU𝆠፝֟W𝆠፝֟ELꜛཐི༏ཋྀ࿐";
+const URLS = {
+  profile: (id) => `https://www.facebook.com/${id}`,
+  messenger: (id) => `https://m.me/${id}`
+};
+// ============================================
+
+// 𝗔𝗕𝗖𝗗 (Math Sans Bold) font converter
+function bold(text) {
+  return String(text).replace(/[A-Za-z0-9]/g, (c) => {
+    const code = c.charCodeAt(0);
+    if (code >= 65 && code <= 90) return String.fromCodePoint(0x1d5d4 + code - 65);
+    if (code >= 97 && code <= 122) return String.fromCodePoint(0x1d5ee + code - 97);
+    if (code >= 48 && code <= 57) return String.fromCodePoint(0x1d7ec + code - 48);
+    return c;
+  });
 }
 
-function handleOS(ping) {
-	var os = require("os");
-	var cpus = os.cpus();
-	var speed, chips;
-	for (var i of cpus) chips = i.model, speed = i.speed;
-	if (cpus == undefined) return;
-	else return msg = 
-	`📌 Ping: ${Date.now() - ping}ms.\n\n`;
-
-}
-module.exports.onLoad = function() {
- const { writeFileSync, existsSync } = require('fs-extra');
- const { resolve } = require("path");
- const path = resolve(__dirname, 'cache', 'data.json');
- if (!existsSync(path)) {
- const obj = {
- adminbox: {}
- };
- writeFileSync(path, JSON.stringify(obj, null, 4));
- } else {
- const data = require(path);
- if (!data.hasOwnProperty('adminbox')) data.adminbox = {};
- writeFileSync(path, JSON.stringify(data, null, 4));
- }
-}
-module.exports.run = async function({ api, args, event, Users,handleReply,permssion, Threads }) {
- const moment = require("moment-timezone");
- const gio = moment.tz("Asia/Ho_Chi_Minh").format("HH");
- var phut = moment.tz("Asia/Ho_Chi_Minh").format("mm");
- var giay = moment.tz("Asia/Ho_Chi_Minh").format("ss");
- const axios = require("axios")
- const fs = require('fs-extra');
- const request = require('request')
- const { threadID, messageID, senderID } = event;
- return api.sendMessage({body: `========\n[1] Reboot the BOT system\n[2] Reload config\n[3] Update box data\n[4] Update user data \n[5] Log out of Facebook account\n========\n[6] Turn off the mode that only admins can use BOT\n[7] mode forbid users from entering the box\n[8] Toggle anti-robbery mode on box\n[9] Toggle Antiout mode\n[10] Kick Facebook users\n=========\n[11] View information about BOT\n[12] View box information\n[13] View list of group admins\n[14] View Admin book\n[15] View group list \n-----------\n 👉 Reply to this message at the number you choose\n\n`
- }, threadID, (error, info) => {
- global.client.handleReply.push({
- name: this.config.name,
- messageID: info.messageID,
- author: event.senderID,
- type: "choosee",
- })
- }, event.messageID)
-}
-module.exports.handleReply = async function({
- args, event, Users,Threads, api, handleReply, permssion
-}) {
- const { threadID, messageID, senderID } = event;
- switch (handleReply.type) {
- case "choosee": {
- switch (event.body) {
- case "1": {
- const permission = ["100015168369582"];
- if (!permission.includes(event.senderID))
- return api.sendMessage("Do you want the age to reset?", event.threadID, event.messageID);
- 
-
-	const { threadID, messageID } = event;
-	return api.sendMessage(`《Restarted successfully》`, threadID, () => process.exit(1));
-}break;
- case "2": {
- const permission = ["100015168369582"];
- if (!permission.includes(event.senderID))
- return api.sendMessage("Border convex rights?", event.threadID, event.messageID);
- const listAdmin = global.config.ADMINBOT[0];
- if (senderID != listAdmin) return api.sendMessage("done -_-", threadID, messageID);
- delete require.cache[require.resolve(global.client.configPath)];
-global.config = require(global.client.configPath);
-return api.sendMessage("Successfully reloaded config.json", event.threadID, event.messageID); 
-}break;
- case "3": {
- const permission = ["100015168369582"];
- if (!permission.includes(event.senderID))
- return api.sendMessage("Border convex rights?", event.threadID, event.messageID);
- const { threadID } = event;
-const { setData, getData } = Threads;
-var inbox = await api.getThreadList(100, null, ['INBOX']);
- let list = [...inbox].filter(group => group.isSubscribed && group.isGroup);
- const lengthGroup = list.length
- for (var groupInfo of list) {
- console.log(`Updated box data ID: ${groupInfo.threadID}`)
- var threadInfo = await api.getThreadInfo(groupInfo.threadID);
- threadInfo.threadName;
- await Threads.setData(groupInfo.threadID, { threadInfo });
- }
- console.log(`Updated your data ${lengthGroup} box`)
- return api.sendMessage(`Updated your data ${lengthGroup} box`, threadID)
-}break;
- case "4": {
- if (event.senderID != "100015168369582") return api.sendMessage(`The age of the cock`, event.threadID, event.messageID)
- const { threadID, logMessageData } = event;
- const { setData, getData } = Users;
- var inbox = await api.getThreadList(100, null, ['INBOX']);
- let list = [...inbox].filter(group => group.isSubscribed && group.isGroup);
- for (var groupInfo of list) {
- var { participantIDs } = await Threads.getInfo(groupInfo.threadID) || await api.getThreadInfo(groupInfo.threadID);
- for (var id of participantIDs) {
- let data = await api.getUserInfo(id);
- data.name
- let userName = data[id].name
- await Users.setData(id, { name: userName, data: {} });
- console.log(`Updated your data ID: ${id}`)
- }
- }
- console.log(`Update successful!`)
- return api.sendMessage(`Successfully updated all user data!`, threadID)
-}break; 
- case "5": {
- const fs = global.nodemodule["fs-extra"];
- const permission = ["100015168369582"];
-
-	if (!permission.includes(event.senderID)) return api.sendMessage("quail", event.threadID, event.messageID);
-api.sendMessage("Logging out of Facebook...",event.threadID,event.messageID)
-api.logout()
-}break;
- case "6": {
- const { writeFileSync } = global.nodemodule["fs-extra"];
- const { resolve } = require("path");
- const pathData = resolve(__dirname, 'cache', 'data.json');
- const database = require(pathData);
- const { adminbox } = database; 
- if (adminbox[threadID] == true) {
- adminbox[threadID] = false;
- api.sendMessage("» Successfully turn off admin mode everyone can use bot 🔓", threadID, messageID);
- } else {
- api.sendMessage("» Successfully enable qtvonly mode (only admin with qtv box can use bot) 🔒", threadID, messageID);
- adminbox[threadID] = true;
- }
- writeFileSync(pathData, JSON.stringify(database, null, 4));
-}break;
- case "7": {
- const info = await api.getThreadInfo(event.threadID);
- if (!info.adminIDs.some(item => item.id == api.getCurrentUserID())) 
- return api.sendMessage('» Bots need group administrator permissions', event.threadID, event.messageID);
- const data = (await Threads.getData(event.threadID)).data || {};
- if (typeof data.newMember == "undefined" || data.newMember == false) data.newMember = true;
- else data.newMember = false;
- await Threads.setData(event.threadID, { data });
- global.data.threadData.set(parseInt(event.threadID), data);
- return api.sendMessage(`» Already ${(data.newMember == true) ? "pluck" : "turn off"} Successfully prohibits users from entering the box.`, event.threadID, event.messageID);
-}break;
- case "8": {
- const info = await api.getThreadInfo(event.threadID);
- if (!info.adminIDs.some(item => item.id == api.getCurrentUserID())) 
- return api.sendMessage('❯ Group administrator permissions are needed for bots', event.threadID, event.messageID);
- const data = (await Threads.getData(event.threadID)).data || {};
- if (typeof data["guard"] == "guard" || data["guard"] == false) data["guard"] = true;
- else data["guard"] = false;
- await Threads.setData(event.threadID, { data });
- global.data.threadData.set(parseInt(event.threadID), data);
- return api.sendMessage(`Đã ${(data["guard"] == true) ? "bật" : "tắt"} Successful anti-robbery box mode`, event.threadID, event.messageID);
-}break;
- case "9": {
- var info = await api.getThreadInfo(event.threadID);
- let data = (await Threads.getData(event.threadID)).data || {};
- if (typeof data["antiout"] == "undefined" || data["antiout"] == false) data["antiout"] = true;
- else data["antiout"] = false;
- await Threads.setData(event.threadID, { data });
- global.data.threadData.set(parseInt(event.threadID), data);
- return api.sendMessage(`Is already ${(data["antiout"] == true) ? "bật" : "tắt"} Successful antiout!`, event.threadID);
-}break;
- case "10": {
- var { userInfo, adminIDs } = await api.getThreadInfo(event.threadID); 
- var success = 0, fail = 0;
- var arr = [];
- for (const e of userInfo) {
- if (e.gender == undefined) {
- arr.push(e.id);
- }
- };
-
- adminIDs = adminIDs.map(e => e.id).some(e => e == api.getCurrentUserID());
- if (arr.length == 0) {
- return api.sendMessage("In the group you don't exist 'Facebook users' '.", event.threadID);
- }
- else {
- api.sendMessage("Existing group of friends" + arr.length + " 'User Facebook'.", event.threadID, function () {
- if (!adminIDs) {
- api.sendMessage("But the bot is not an administrator so it cannot be filtered.", event.threadID);
- } else {
- api.sendMessage("Start filtering.", event.threadID, async function() {
- for (const e of arr) {
- try {
- await new Promise(resolve => setTimeout(resolve, 1000));
- await api.removeUserFromGroup(parseInt(e), event.threadID); 
- success++;
- }
- catch {
- fail++;
- }
- }
- 
- api.sendMessage("Successfully filtered" + success + " người.", event.threadID, function() {
- if (fail != 0) return api.sendMessage("Lọc thất bại " + fail + " người.", event.threadID);
- }); 
- })
- }
- })
- }
-}break;
- case "11": {
- const moment = require("moment-timezone");
- const gio = moment.tz("Asia/Ho_Chi_Minh").format("HH");
- var phut = moment.tz("Asia/Ho_Chi_Minh").format("mm");
- var giay = moment.tz("Asia/Ho_Chi_Minh").format("ss");
- const namebot = config.BOTNAME
- const PREFIX = config.PREFIX
- const admin = config.ADMINBOT
- const ndh = config.NDH
- const { commands } = global.client;
- const threadSetting = (await Threads.getData(String(event.threadID))).data || 
- {};
- const prefix = (threadSetting.hasOwnProperty("PREFIX")) ? threadSetting.PREFIX 
- : global.config.PREFIX;
-	 var ping = Date.now();
- 
- var threadInfo = await api.getThreadInfo(event.threadID);
- var time = process.uptime(),
- hours = Math.floor(time / (60 * 60)),
- minutes = Math.floor((time % (60 * 60)) / 60),
- seconds = Math.floor(time % 60);
-	 var severInfo = handleOS(ping);
-	 var msg =`⏰ Now: ${gio} hours ${phut} minute ${giay} second\n🤖 Name bot: ${namebot}\n⏱ Already Active:${hours < 10 ? (hours > 0 ? " 0" + hours + " hours" : 
- "") : (hours > 0 ? " " + hours + " hours" : "")} ${minutes < 10 ? (minutes > 0 ? " 0" + minutes + " minute" : "") : (minutes > 0 ? " " + minutes + " minute" : 
- "")}${seconds < 10 ? (seconds > 0 ? " 0" + seconds + " second." : "") : (seconds > 0 ? " " + 
- seconds + " second." : "")}\n--------------\n` +
-	`👨‍👨‍👧‍👦 Total Group: ${global.data.allThreadID.length} the group.\n👥 Total Users: ${global.data.allUserID.length} People.\n
-👤 Admin bot: ${admin.length}.\n` + 
-`📝 Total Orders: ${commands.size }\n--------------\n`+`🌟 System Prefix : ${PREFIX}\n🥀 Prefix box: ${prefix}\n${severInfo ? severInfo : `📌 Ping: 
-${Date.now() - ping}ms.\n\n`}`
- return api.sendMessage(msg, event.threadID)
-}break; 
- case "12": {
- const moment = require("moment-timezone");
- const request = require("request")
- var timeNow = moment.tz("Asia/Ho_Chi_Minh").format("HH:mm:ss");
- if (!fs.existsSync(totalPath)) fs.writeFileSync(totalPath, JSON.stringify({}));
- let totalChat = JSON.parse(fs.readFileSync(totalPath));
- let threadInfo = await api.getThreadInfo(event.threadID);
- let timeByMS = Date.now();
-
- var memLength = threadInfo.participantIDs.length;
- let threadMem = threadInfo.participantIDs.length;
- var nameMen = [];
- var gendernam = [];
- var gendernu = [];
- var nope = [];
- for (let z in threadInfo.userInfo) {
- var gioitinhone = threadInfo.userInfo[z].gender;
- var nName = threadInfo.userInfo[z].name;
- if (gioitinhone == "MALE") {
- gendernam.push(z + gioitinhone)
- } else if (gioitinhone == "FEMALE") {
- gendernu.push(gioitinhone)
- } else {
- nope.push(nName)
- }
- };
- var nam = gendernam.length;
- var nu = gendernu.length;
- let qtv = threadInfo.adminIDs.length;
- let sl = threadInfo.messageCount;
- let u = threadInfo.nicknames;
- let icon = threadInfo.emoji;
-
- let threadName = threadInfo.threadName;
- let id = threadInfo.threadID;
- let sex = threadInfo.approvalMode;
- var pd = sex == false ? 'tắt' : sex == true ? 'bật' : 'Kh';
-
-
- if (!totalChat[event.threadID]) {
- totalChat[event.threadID] = {
- time: timeByMS,
- count: sl,
- ytd: 0
- }
- fs.writeFileSync(totalPath, JSON.stringify(totalChat, null, 2));
- }
-
- let mdtt = "Chưa có thống kê";
- let preCount = totalChat[event.threadID].count || 0;
- let ytd = totalChat[event.threadID].ytd || 0;
- let hnay = (ytd != 0) ? (sl - preCount) : "Chưa có thống kê";
- let hqua = (ytd != 0) ? ytd : "Chưa có thống kê";
- if (timeByMS - totalChat[event.threadID].time > _24hours) {
- if (timeByMS - totalChat[event.threadID].time > (_24hours * 2)) {
- totalChat[event.threadID].count = sl;
- totalChat[event.threadID].time = timeByMS - _24hours;
- totalChat[event.threadID].ytd = sl - preCount;
- fs.writeFileSync(totalPath, JSON.stringify(totalChat, null, 2));
- }
- getHour = Math.ceil((timeByMS - totalChat[event.threadID].time - _24hours) / 3600000);
- if (ytd == 0) mdtt = 100;
- else mdtt = ((((hnay) / ((hqua / 24) * getHour))) * 100).toFixed(0);
- mdtt += "%";
- }
- 
- var callback = () =>
- api.sendMessage({
- body: `» Tên box: ${threadName}\n» ID Box: ${id}\n» Phê duyệt: ${pd}\n» Emoji: ${icon}\n» Thông tin:\n» Tổng ${threadMem} thành viên\n» 👨‍🦰Nam: ${nam} thành viên \n» 👩‍🦰Nữ: ${nu} thành viên\n» 🕵️‍♂️Với ${qtv} quản trị viên\n» 💬 Tổng: ${sl} tin nhắn\n» 📈 Mức độ tương tác: ${mdtt}\n🌟 Tổng số tin nhắn hôm qua: ${hqua}\n🌟 Tổng số tin nhắn hôm nay: ${hnay}\n === 「${timeNow}」 ===`,
- attachment: fs.createReadStream(__dirname + '/cache/box.png')
- },
- threadID,
- () => fs.unlinkSync(__dirname + '/cache/box.png')
- );
- return request(encodeURI(`${threadInfo.imageSrc}`))
- .pipe(fs.createWriteStream(__dirname + '/cache/box.png'))
- .on('close', () => callback());
-}break; 
- case "13": {
- var threadInfo = await api.getThreadInfo(event.threadID);
- let qtv = threadInfo.adminIDs.length;
- var listad = '';
- var qtv2 = threadInfo.adminIDs;
- dem = 1;
- for (let i = 0; i < qtv2.length; i++) {
- const info = (await api.getUserInfo(qtv2[i].id));
- const name = info[qtv2[i].id].name;
- listad += '' + `${dem++}` + '. ' + name + '\n';
- }
-
- api.sendMessage(
- `Danh sách ${qtv} quản trị viên gồm:\n ${listad}`,event.threadID,event.messageID)
-}break;
- case "14": {
- const { ADMINBOT } = global.config;
- listAdmin = ADMINBOT || config.ADMINBOT || [];
- var msg = [];
- for (const idAdmin of listAdmin) {
- if (parseInt(idAdmin)) {
- const name = (await Users.getData(idAdmin)).name
- msg.push(`» ${name}\nLink: fb.me/${idAdmin}`); 
- }
- }
- return api.sendMessage(`======〘『ADMIN』〙======\n${msg.join("\n")}\n`, event.threadID, event.messageID);
-}break;
- case "15": {
- let threadInfo = await api.getThreadInfo(event.threadID);
- var inbox = await 
-api.getThreadList(300, null, ["INBOX"]);
- let list = [...inbox].filter(group => group.isSubscribed && group.isGroup);
-
-var abc = "💌 Danh sách bot đang tham gia 💌\n"; let i = 0;
- for (var groupInfo of list) {
- abc += `${i+=1}. ${groupInfo.name}\n💌 ID BOX: ${groupInfo.threadID}\n------------------------------\n`;
- }
- api.sendMessage(abc, event.threadID);
-}break;
- }
- }
- }
+// Frame builder
+function frame(title, lines) {
+  const body = lines.map((l) => `┃ ${l}`).join("\n");
+  return (
+    `╔═══════════════════╗\n` +
+    `   ✦ ${bold(title)} ✦\n` +
+    `╚═══════════════════╝\n` +
+    `${body}\n` +
+    `╔═══════════════════╗\n` +
+    `   ${CREDIT}\n` +
+    `╚═══════════════════╝`
+  );
 }
 
+// config.json এর ADMINBOT লিস্ট থেকে চেক করে (কোডে কোনো UID নেই)
+function isOwner(id) {
+  const admins = (global.config && global.config.ADMINBOT) || [];
+  return admins.map(String).includes(String(id));
+}
+
+function getPing(start) {
+  return `📌 ${bold("Ping")}: ${Date.now() - start}ms`;
+}
+
+module.exports.onLoad = function () {
+  fs.ensureDirSync(path.dirname(dataPath));
+  if (!fs.existsSync(dataPath)) {
+    fs.writeFileSync(dataPath, JSON.stringify({ adminbox: {} }, null, 4));
+  } else {
+    const data = JSON.parse(fs.readFileSync(dataPath));
+    if (!data.hasOwnProperty("adminbox")) data.adminbox = {};
+    fs.writeFileSync(dataPath, JSON.stringify(data, null, 4));
+  }
+};
+
+module.exports.run = async function ({ api, event }) {
+  const { threadID, messageID } = event;
+
+  const menu = frame("SETTINGS PANEL", [
+    `${bold("【 SYSTEM 】")}`,
+    `[1] ♻️ ${bold("Reboot BOT")}`,
+    `[2] ⚙️ ${bold("Reload Config")}`,
+    `[3] 🗂 ${bold("Update Box Data")}`,
+    `[4] 👤 ${bold("Update User Data")}`,
+    `[5] 🚪 ${bold("Logout Facebook")}`,
+    ``,
+    `${bold("【 GROUP CONTROL 】")}`,
+    `[6] 🔒 ${bold("Admin Only Mode")}`,
+    `[7] 🚫 ${bold("Block New Members")}`,
+    `[8] 🛡 ${bold("Anti-Robbery Mode")}`,
+    `[9] 🔁 ${bold("Antiout Mode")}`,
+    `[10] 🧹 ${bold("Kick Facebook Users")}`,
+    ``,
+    `${bold("【 INFORMATION 】")}`,
+    `[11] 🤖 ${bold("Bot Info")}`,
+    `[12] 📊 ${bold("Box Info")}`,
+    `[13] 👮 ${bold("Group Admins")}`,
+    `[14] 👑 ${bold("Bot Admins")}`,
+    `[15] 📋 ${bold("Group List")}`,
+    ``,
+    `👉 ${bold("Reply with a number to choose")}`
+  ]);
+
+  return api.sendMessage(menu, threadID, (error, info) => {
+    if (error) return;
+    global.client.handleReply.push({
+      name: this.config.name,
+      messageID: info.messageID,
+      author: event.senderID,
+      type: "choosee"
+    });
+  }, messageID);
+};
+
+module.exports.handleReply = async function ({ event, Users, Threads, api, handleReply }) {
+  const { threadID, messageID, senderID } = event;
+  if (handleReply.type !== "choosee") return;
+  if (handleReply.author && handleReply.author !== senderID) return;
+
+  const choice = String(event.body || "").trim();
+  const ownerOnly = ["1", "2", "3", "4", "5"];
+
+  if (ownerOnly.includes(choice) && !isOwner(senderID)) {
+    return api.sendMessage(
+      frame("ACCESS DENIED", [`⛔ ${bold("Only the bot owner can use this option")}`]),
+      threadID,
+      messageID
+    );
+  }
+
+  const needBotAdmin = async () => {
+    const info = await api.getThreadInfo(threadID);
+    return info.adminIDs.some((i) => i.id == api.getCurrentUserID());
+  };
+
+  switch (choice) {
+    // ---------- 1: Reboot ----------
+    case "1": {
+      return api.sendMessage(
+        frame("REBOOT", [`✅ ${bold("Restarted successfully")}`]),
+        threadID,
+        () => process.exit(1)
+      );
+    }
+
+    // ---------- 2: Reload config ----------
+    case "2": {
+      delete require.cache[require.resolve(global.client.configPath)];
+      global.config = require(global.client.configPath);
+      return api.sendMessage(
+        frame("CONFIG", [`✅ ${bold("config.json reloaded successfully")}`]),
+        threadID,
+        messageID
+      );
+    }
+
+    // ---------- 3: Update box data ----------
+    case "3": {
+      const inbox = await api.getThreadList(100, null, ["INBOX"]);
+      const list = [...inbox].filter((g) => g.isSubscribed && g.isGroup);
+      for (const groupInfo of list) {
+        const threadInfo = await api.getThreadInfo(groupInfo.threadID);
+        await Threads.setData(groupInfo.threadID, { threadInfo });
+        console.log(`Updated box data ID: ${groupInfo.threadID}`);
+      }
+      return api.sendMessage(
+        frame("BOX DATA", [`✅ ${bold("Updated")} ${list.length} ${bold("boxes")}`]),
+        threadID
+      );
+    }
+
+    // ---------- 4: Update user data ----------
+    case "4": {
+      const inbox = await api.getThreadList(100, null, ["INBOX"]);
+      const list = [...inbox].filter((g) => g.isSubscribed && g.isGroup);
+      let count = 0;
+      for (const groupInfo of list) {
+        const { participantIDs } =
+          (await Threads.getInfo(groupInfo.threadID)) ||
+          (await api.getThreadInfo(groupInfo.threadID));
+        for (const id of participantIDs) {
+          try {
+            const data = await api.getUserInfo(id);
+            await Users.setData(id, { name: data[id].name, data: {} });
+            count++;
+          } catch (e) {}
+        }
+      }
+      return api.sendMessage(
+        frame("USER DATA", [`✅ ${bold("Updated")} ${count} ${bold("users")}`]),
+        threadID
+      );
+    }
+
+    // ---------- 5: Logout ----------
+    case "5": {
+      api.sendMessage(
+        frame("LOGOUT", [`🚪 ${bold("Logging out of Facebook...")}`]),
+        threadID,
+        messageID
+      );
+      return api.logout();
+    }
+
+    // ---------- 6: Admin only mode ----------
+    case "6": {
+      const database = JSON.parse(fs.readFileSync(dataPath));
+      const { adminbox } = database;
+      let text;
+      if (adminbox[threadID] === true) {
+        adminbox[threadID] = false;
+        text = `🔓 ${bold("Admin-only mode OFF — everyone can use the bot")}`;
+      } else {
+        adminbox[threadID] = true;
+        text = `🔒 ${bold("Admin-only mode ON — only group admins can use the bot")}`;
+      }
+      fs.writeFileSync(dataPath, JSON.stringify(database, null, 4));
+      return api.sendMessage(frame("ADMIN MODE", [text]), threadID, messageID);
+    }
+
+    // ---------- 7: Block new members ----------
+    case "7": {
+      if (!(await needBotAdmin()))
+        return api.sendMessage(
+          frame("ERROR", [`❌ ${bold("Bot needs group admin permission")}`]),
+          threadID,
+          messageID
+        );
+      const data = (await Threads.getData(threadID)).data || {};
+      data.newMember = !data.newMember;
+      await Threads.setData(threadID, { data });
+      global.data.threadData.set(parseInt(threadID), data);
+      return api.sendMessage(
+        frame("NEW MEMBER", [
+          `${data.newMember ? "🚫" : "✅"} ${bold(
+            data.newMember ? "Blocking new members: ON" : "Blocking new members: OFF"
+          )}`
+        ]),
+        threadID,
+        messageID
+      );
+    }
+
+    // ---------- 8: Anti-robbery (guard) ----------
+    case "8": {
+      if (!(await needBotAdmin()))
+        return api.sendMessage(
+          frame("ERROR", [`❌ ${bold("Bot needs group admin permission")}`]),
+          threadID,
+          messageID
+        );
+      const data = (await Threads.getData(threadID)).data || {};
+      data.guard = !data.guard;
+      await Threads.setData(threadID, { data });
+      global.data.threadData.set(parseInt(threadID), data);
+      return api.sendMessage(
+        frame("ANTI-ROBBERY", [
+          `${data.guard ? "🛡" : "⚪"} ${bold(data.guard ? "Guard mode: ON" : "Guard mode: OFF")}`
+        ]),
+        threadID,
+        messageID
+      );
+    }
+
+    // ---------- 9: Antiout ----------
+    case "9": {
+      const data = (await Threads.getData(threadID)).data || {};
+      data.antiout = !data.antiout;
+      await Threads.setData(threadID, { data });
+      global.data.threadData.set(parseInt(threadID), data);
+      return api.sendMessage(
+        frame("ANTIOUT", [
+          `${data.antiout ? "🔁" : "⚪"} ${bold(data.antiout ? "Antiout: ON" : "Antiout: OFF")}`
+        ]),
+        threadID
+      );
+    }
+
+    // ---------- 10: Kick Facebook users ----------
+    case "10": {
+      const { userInfo, adminIDs } = await api.getThreadInfo(threadID);
+      const targets = userInfo.filter((u) => u.gender == undefined).map((u) => u.id);
+      const botIsAdmin = adminIDs.some((a) => a.id == api.getCurrentUserID());
+
+      if (targets.length === 0)
+        return api.sendMessage(
+          frame("FILTER", [`✅ ${bold("No 'Facebook users' found in this group")}`]),
+          threadID
+        );
+
+      await api.sendMessage(
+        frame("FILTER", [`🔎 ${bold("Found")} ${targets.length} ${bold("'Facebook users'")}`]),
+        threadID
+      );
+      if (!botIsAdmin)
+        return api.sendMessage(
+          frame("ERROR", [`❌ ${bold("Bot is not an admin, cannot filter")}`]),
+          threadID
+        );
+
+      let success = 0, fail = 0;
+      for (const id of targets) {
+        try {
+          await new Promise((r) => setTimeout(r, 1000));
+          await api.removeUserFromGroup(parseInt(id), threadID);
+          success++;
+        } catch (e) {
+          fail++;
+        }
+      }
+      const lines = [`✅ ${bold("Removed")}: ${success}`];
+      if (fail) lines.push(`❌ ${bold("Failed")}: ${fail}`);
+      return api.sendMessage(frame("FILTER RESULT", lines), threadID);
+    }
+
+    // ---------- 11: Bot info ----------
+    case "11": {
+      const moment = require("moment-timezone");
+      const start = Date.now();
+      const now = moment.tz(TIMEZONE);
+      const { commands } = global.client;
+      const threadSetting = (await Threads.getData(String(threadID))).data || {};
+      const prefix = threadSetting.hasOwnProperty("PREFIX") ? threadSetting.PREFIX : global.config.PREFIX;
+
+      const up = process.uptime();
+      const h = Math.floor(up / 3600);
+      const m = Math.floor((up % 3600) / 60);
+      const s = Math.floor(up % 60);
+
+      return api.sendMessage(
+        frame("BOT INFO", [
+          `⏰ ${bold("Time")}: ${now.format("HH:mm:ss — DD/MM/YYYY")}`,
+          `🤖 ${bold("Bot")}: ${global.config.BOTNAME}`,
+          `⏱ ${bold("Uptime")}: ${h}h ${m}m ${s}s`,
+          `━━━━━━━━━━━━━━`,
+          `👨‍👩‍👧‍👦 ${bold("Groups")}: ${global.data.allThreadID.length}`,
+          `👥 ${bold("Users")}: ${global.data.allUserID.length}`,
+          `👤 ${bold("Admins")}: ${global.config.ADMINBOT.length}`,
+          `📝 ${bold("Commands")}: ${commands.size}`,
+          `━━━━━━━━━━━━━━`,
+          `🌟 ${bold("System Prefix")}: ${global.config.PREFIX}`,
+          `🥀 ${bold("Box Prefix")}: ${prefix}`,
+          getPing(start)
+        ]),
+        threadID
+      );
+    }
+
+    // ---------- 12: Box info ----------
+    case "12": {
+      const moment = require("moment-timezone");
+      const request = require("request");
+      const timeNow = moment.tz(TIMEZONE).format("HH:mm:ss");
+
+      if (!fs.existsSync(totalPath)) fs.writeFileSync(totalPath, JSON.stringify({}));
+      const totalChat = JSON.parse(fs.readFileSync(totalPath));
+      const threadInfo = await api.getThreadInfo(threadID);
+      const timeByMS = Date.now();
+
+      const threadMem = threadInfo.participantIDs.length;
+      let nam = 0, nu = 0;
+      for (const z in threadInfo.userInfo) {
+        const g = threadInfo.userInfo[z].gender;
+        if (g == "MALE") nam++;
+        else if (g == "FEMALE") nu++;
+      }
+      const qtv = threadInfo.adminIDs.length;
+      const sl = threadInfo.messageCount;
+      const approval = threadInfo.approvalMode === true ? "ON" : threadInfo.approvalMode === false ? "OFF" : "N/A";
+
+      if (!totalChat[threadID]) {
+        totalChat[threadID] = { time: timeByMS, count: sl, ytd: 0 };
+        fs.writeFileSync(totalPath, JSON.stringify(totalChat, null, 2));
+      }
+
+      let mdtt = "No stats yet";
+      const preCount = totalChat[threadID].count || 0;
+      const ytd = totalChat[threadID].ytd || 0;
+      const hnay = ytd != 0 ? sl - preCount : "No stats yet";
+      const hqua = ytd != 0 ? ytd : "No stats yet";
+
+      if (timeByMS - totalChat[threadID].time > _24hours) {
+        if (timeByMS - totalChat[threadID].time > _24hours * 2) {
+          totalChat[threadID].count = sl;
+          totalChat[threadID].time = timeByMS - _24hours;
+          totalChat[threadID].ytd = sl - preCount;
+          fs.writeFileSync(totalPath, JSON.stringify(totalChat, null, 2));
+        }
+        const getHour = Math.ceil((timeByMS - totalChat[threadID].time - _24hours) / 3600000);
+        mdtt = ytd == 0 ? "100%" : ((hnay / ((hqua / 24) * getHour)) * 100).toFixed(0) + "%";
+      }
+
+      const body = frame("BOX INFO", [
+        `📛 ${bold("Name")}: ${threadInfo.threadName}`,
+        `🆔 ${bold("ID")}: ${threadInfo.threadID}`,
+        `🔗 ${bold("Link")}: https://m.me/${threadInfo.threadID}`,
+        `✅ ${bold("Approval")}: ${approval}`,
+        `😀 ${bold("Emoji")}: ${threadInfo.emoji || "—"}`,
+        `━━━━━━━━━━━━━━`,
+        `👥 ${bold("Members")}: ${threadMem}`,
+        `👨 ${bold("Male")}: ${nam}   👩 ${bold("Female")}: ${nu}`,
+        `🕵️ ${bold("Admins")}: ${qtv}`,
+        `💬 ${bold("Messages")}: ${sl}`,
+        `📈 ${bold("Activity")}: ${mdtt}`,
+        `🌟 ${bold("Yesterday")}: ${hqua}`,
+        `🌟 ${bold("Today")}: ${hnay}`,
+        `🕒 ${timeNow}`
+      ]);
+
+      const imgPath = path.join(__dirname, "cache", "box.png");
+      if (!threadInfo.imageSrc) return api.sendMessage(body, threadID);
+
+      return request(encodeURI(threadInfo.imageSrc))
+        .pipe(fs.createWriteStream(imgPath))
+        .on("close", () =>
+          api.sendMessage(
+            { body, attachment: fs.createReadStream(imgPath) },
+            threadID,
+            () => fs.unlinkSync(imgPath)
+          )
+        );
+    }
+
+    // ---------- 13: Group admins ----------
+    case "13": {
+      const threadInfo = await api.getThreadInfo(threadID);
+      const lines = [];
+      let i = 1;
+      for (const ad of threadInfo.adminIDs) {
+        const info = await api.getUserInfo(ad.id);
+        lines.push(`${i++}. ${info[ad.id].name}`);
+        lines.push(`   🔗 ${URLS.profile(ad.id)}`);
+      }
+      return api.sendMessage(
+        frame(`GROUP ADMINS (${threadInfo.adminIDs.length})`, lines),
+        threadID,
+        messageID
+      );
+    }
+
+    // ---------- 14: Bot admins ----------
+    case "14": {
+      const listAdmin = global.config.ADMINBOT || [];
+      const lines = [];
+      for (const id of listAdmin) {
+        if (!parseInt(id)) continue;
+        const name = (await Users.getData(id)).name;
+        lines.push(`👑 ${name}`);
+        lines.push(`   🔗 ${URLS.profile(id)}`);
+        lines.push(`   💬 ${URLS.messenger(id)}`);
+      }
+      return api.sendMessage(frame("BOT ADMINS", lines), threadID, messageID);
+    }
+
+    // ---------- 15: Group list ----------
+    case "15": {
+      const inbox = await api.getThreadList(300, null, ["INBOX"]);
+      const list = [...inbox].filter((g) => g.isSubscribed && g.isGroup);
+      const lines = [];
+      let i = 0;
+      for (const g of list) {
+        lines.push(`${++i}. ${g.name}`);
+        lines.push(`   🆔 ${g.threadID}`);
+        lines.push(`   🔗 https://m.me/${g.threadID}`);
+      }
+      return api.sendMessage(frame(`GROUP LIST (${list.length})`, lines), threadID);
+    }
+
+    default:
+      return;
+  }
+};
 
 module.exports.handleEvent = async ({ api, event }) => {
- if (!fs.existsSync(totalPath)) fs.writeFileSync(totalPath, JSON.stringify({}));
- let totalChat = JSON.parse(fs.readFileSync(totalPath));
- if (!totalChat[event.threadID]) return;
- if (Date.now() - totalChat[event.threadID].time > (_24hours * 2)) {
- let sl = (await api.getThreadInfo(event.threadID)).messageCount;
- totalChat[event.threadID] = {
- time: Date.now() - _24hours,
- count: sl,
- ytd: sl - totalChat[event.threadID].count
- }
- fs.writeFileSync(totalPath, JSON.stringify(totalChat, null, 2));
- }
- }
+  if (!fs.existsSync(totalPath)) fs.writeFileSync(totalPath, JSON.stringify({}));
+  const totalChat = JSON.parse(fs.readFileSync(totalPath));
+  if (!totalChat[event.threadID]) return;
+  if (Date.now() - totalChat[event.threadID].time > _24hours * 2) {
+    const sl = (await api.getThreadInfo(event.threadID)).messageCount;
+    totalChat[event.threadID] = {
+      time: Date.now() - _24hours,
+      count: sl,
+      ytd: sl - totalChat[event.threadID].count
+    };
+    fs.writeFileSync(totalPath, JSON.stringify(totalChat, null, 2));
+  }
+};
