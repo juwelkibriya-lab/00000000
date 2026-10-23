@@ -382,11 +382,11 @@ Render / Railway / Heroku-তে সারাক্ষণ অনলাইন।
 
 </details>
 
-[![License](https://img.shields.io/github/license/MR-JUWEL-CHAT-BOT2026/MR-JUWEL-CHAT-BOT-2026?style=for-the-badge&color=ffd200)](https://github.com/MR-JUWEL-CHAT-BOT2026/MR-JUWEL-CHAT-BOT-2026/blob/main/LICENSE)
-[![GitHub issues](https://img.shields.io/github/issues/MR-JUWEL-CHAT-BOT2026/MR-JUWEL-CHAT-BOT-2026?style=for-the-badge&color=ff4d4d)](https://github.com/MR-JUWEL-CHAT-BOT2026/MR-JUWEL-CHAT-BOT-2026/issues)
-[![GitHub forks](https://img.shields.io/github/forks/MR-JUWEL-CHAT-BOT2026/MR-JUWEL-CHAT-BOT-2026?style=for-the-badge&color=00c6ff)](https://github.com/MR-JUWEL-CHAT-BOT2026/MR-JUWEL-CHAT-BOT-2026/network)
-[![GitHub stars](https://img.shields.io/github/stars/MR-JUWEL-CHAT-BOT2026/MR-JUWEL-CHAT-BOT-2026?style=for-the-badge&color=ffd200)](https://github.com/MR-JUWEL-CHAT-BOT2026/MR-JUWEL-CHAT-BOT-2026/stargazers)
-[![Last commit](https://img.shields.io/github/last-commit/MR-JUWEL-CHAT-BOT2026/MR-JUWEL-CHAT-BOT-2026?style=for-the-badge&color=00e676)](https://github.com/MR-JUWEL-CHAT-BOT2026/MR-JUWEL-CHAT-BOT-2026/commits)
+[![License](https://github.com/GOAT-MIRAI-MIX/MR-JUWEL.git)](https://github.com/GOAT-MIRAI-MIX/MR-JUWEL.git/blob/main/LICENSE)
+[![GitHub issues](https://github.com/GOAT-MIRAI-MIX/MR-JUWEL.git)](https://github.com/MR-JUWEL-CHAT-BOT2026/MR-JUWEL-CHAT-BOT-2026/issues)
+[![GitHub forks](https://github.com/GOAT-MIRAI-MIX/MR-JUWEL.git)](https://github.com/GOAT-MIRAI-MIX/MR-JUWEL.git)
+[![GitHub stars](https://github.com/GOAT-MIRAI-MIX/MR-JUWEL.git)](https://github.com/GOAT-MIRAI-MIX/MR-JUWEL.git)
+[![Last commit](https://github.com/GOAT-MIRAI-MIX/MR-JUWEL.git)](https://github.com/GOAT-MIRAI-MIX/MR-JUWEL.git)
 
 ---
 
@@ -412,7 +412,7 @@ Render / Railway / Heroku-তে সারাক্ষণ অনলাইন।
 <h1 align="center">📊 GITHUB STATS</h1>
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=MR-JUWEL-CHAT-BOT2026&show_icons=true&theme=tokyonight&hide_border=true"/>
+  <img src="https://github-readme-stats.vercel.app/api?username=GOAT-MIRAI-MIX&show_icons=true&theme=tokyonight&hide_border=true"/>
 </p>
 
 ---
@@ -551,7 +551,7 @@ node Juwel.js        # অথবা: npm start
 </p>
 
 <p align="center">
-  <a href="https://github.com/MR-JUWEL-CHAT-BOT2026/MR-JUWEL-CHAT-BOT-2026.git"><img src="https://img.icons8.com/fluency/48/000000/github.png" alt="GitHub"></a>
+  <a href="https://github.com/GOAT-MIRAI-MIX/MR-JUWEL.git"><img src="https://img.icons8.com/fluency/48/000000/github.png" alt="GitHub"></a>
   <a href="https://wa.me/8801943488192"><img src="https://img.icons8.com/color/48/000000/whatsapp.png" alt="WhatsApp"></a>
   <a href="https://facebook.com/61592716197470"><img src="https://img.icons8.com/fluency/48/000000/facebook.png" alt="Facebook"></a>
   <a href="https://t.me/+7RqN73zA6aBiY2U1"><img src="https://img.icons8.com/color/48/000000/telegram-app.png" alt="Telegram"></a>
@@ -561,5 +561,4 @@ node Juwel.js        # অথবা: npm start
 <p align="center"><b>I hope you enjoy my fork! Thank you for supporting the cyber chat bot community! 🫶</b></p>
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=12,14,18,24&height=120&section=footer"/>
-</p>
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=12,14,18,24&height=120&section=footergig
