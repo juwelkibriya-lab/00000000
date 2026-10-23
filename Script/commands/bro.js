@@ -211,4 +211,22 @@ module.exports.run = async function ({ event, api }) {
       targetName = info[targetID]?.name || targetName;
     } catch (_) {}
 
-    const me
+    const mentionTag = `@${targetName}`;
+    const cap = CAPTIONS[Math.floor(Math.random() * CAPTIONS.length)];
+    const body = buildBody(mentionTag, cap);
+
+    return api.sendMessage(
+      {
+        body,
+        mentions: [{ tag: mentionTag, id: targetID }],
+        attachment: fs.createReadStream(imgPath)
+      },
+      threadID,
+      () => fs.unlink(imgPath, () => {}),
+      messageID
+    );
+  } catch (err) {
+    console.error(err);
+    return api.sendMessage("❌ Error: " + err.message, threadID, messageID);
+  }
+};
